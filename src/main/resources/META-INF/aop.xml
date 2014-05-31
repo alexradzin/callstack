@@ -1,0 +1,6 @@
+<aspectj>
+	<aspects>
+		<aspect name="org.callstack.CallStackAspect"/>
+	</aspects>
+	<!--  <weaver option="-nowarn -warn:none -Xlint:ignore" />--> 
+</aspectj>
