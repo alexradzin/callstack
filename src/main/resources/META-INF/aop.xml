@@ -2,5 +2,5 @@
 	<aspects>
 		<aspect name="org.callstack.CallStackAspect"/>
 	</aspects>
-	<!--  <weaver option="-nowarn -warn:none -Xlint:ignore" />--> 
+	<weaver options="-Xlint:ignore" /> 
 </aspectj>
