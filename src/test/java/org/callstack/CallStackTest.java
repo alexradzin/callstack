@@ -20,7 +20,6 @@ public class CallStackTest {
 	}
 
 	@Test
-	@Ignore("Constructors are not supported now. FIXME")
 	public void constructorBooleanArg() throws NoSuchMethodException {
 		new Foo(true);
 	}

@@ -11,6 +11,8 @@ public class Util {
 	private final static Pattern pMethod = Pattern.compile("(\\S+)\\s*\\((.*)\\)");
 	private final static Pattern pArray = Pattern.compile("\\[\\]");
 	private final static Pattern pDigits = Pattern.compile("^\\d+$");
+	private final static Pattern pAnonymousInnerClass = Pattern.compile("\\.(\\d+)");
+	private final static Pattern pInnerClass = Pattern.compile("\\.([a-zA-Z_$][a-zA-Z\\d_$]*)$");
 	
 	private final static Map<String, Class<?>> primitives = new HashMap<>();
 	static {
@@ -23,6 +25,8 @@ public class Util {
 		primitives.put("float", float.class);
 		primitives.put("double", double.class);
 	}
+	
+	
 	
 	
 	
@@ -84,10 +88,30 @@ public class Util {
 			int dim = (spec.length() - name.length()) / 2;
 			
 			Class<?> c = primitives.get(name);
-			if (c == null) {
-				c = Class.forName(name);
-			}
 			
+			name = pAnonymousInnerClass.matcher(name).replaceAll("\\$$1");
+			if (c == null) {
+				try {
+					c = Class.forName(name);
+				} catch (ClassNotFoundException e) {
+					// The class name passed here uses dot even to separate name of inner class from its outer class. 
+					// For example name of class Inner defined into com.company.Outer is com.company.Outer.Inner and not com.company.Outer$Inner as it is required by Class.forName()
+					// So, there is not way to understand where the full name of outer class ends and where the name of inner class starts. Indeed nesting depth of inner classes is unlimited.
+					// This is the reason that we perform here several attempts to replace the last dot by $ and call forName() again.
+					// If nothing helps the original exception is re-thrown. 
+					for (String tryName = pInnerClass.matcher(name).replaceFirst("\\$$1"); tryName.contains("."); tryName = pInnerClass.matcher(tryName).replaceFirst("\\$$1")) {
+						try {
+							c = Class.forName(tryName);
+						} catch (ClassNotFoundException e2) {
+							continue;
+						}
+					}
+					if (c == null) {
+						throw e;
+					}
+				}
+			}
+			 
 			if (dim > 0) {
 				int[] dimensions = new int[dim];
 				c = Array.newInstance(c, dimensions).getClass();

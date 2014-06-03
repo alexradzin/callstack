@@ -1,6 +1,7 @@
 package org.callstack;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 public class CallStackElement<F extends AccessibleObject>  {
@@ -24,8 +25,21 @@ public class CallStackElement<F extends AccessibleObject>  {
 		this.function = function;
 		this.args = args;
 
-		//TODO: check what must be here if this is constructor.
-		String functionName = function instanceof Method ? ((Method)function).getName() : "init";
+		final String functionName;
+		if (function != null) {
+			if (function instanceof Method) {
+				functionName = ((Method)function).getName();
+			} else if (function instanceof Constructor<?>) {
+				functionName = "<init>";
+			} else {
+				throw new IllegalArgumentException(function.getClass().getName());
+			}
+		} else {
+			// this may happen if declaringType is a dynamic proxy
+			functionName = "n/a";
+		}
+		
+		
 		this.stackTraceElement = new StackTraceElement(declaringType.getName(), functionName, fileName, lineNumber);
 	}
 	

@@ -16,7 +16,7 @@ public class Foo {
 	}
 
 	public Foo(boolean dummy) {
-		assertCallStackElement(0, getClass(), "Foo", NO_PARAMS, NO_ARGS);
+		assertCallStackElement(0, getClass(), "<init>", new Class<?>[] {boolean.class}, new Object[] {true});
 		assertCallStackElement(1, CallStackTest.class, "constructorBooleanArg", NO_PARAMS, NO_ARGS);
 	}
 	
@@ -41,7 +41,7 @@ public class Foo {
 	
 	private static AccessibleObject getMethod(Class<?> type, String methodName, Class<?>... parameterTypes) {
 		try {
-			if (type.getSimpleName().equals(methodName)) {
+			if (type.getSimpleName().equals(methodName) || "<init>".equals(methodName)) {
 				return type.getConstructor(parameterTypes);
 			}
 			return type.getMethod(methodName, parameterTypes);
