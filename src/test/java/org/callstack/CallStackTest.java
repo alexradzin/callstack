@@ -5,12 +5,12 @@ import org.junit.Test;
 public class CallStackTest {
 	@Test
 	public void voidNoArgs() throws NoSuchMethodException {
-		new Foo().foo();
+		new Foo(this).foo();
 	}
 
 	@Test
 	public void void2dArr() throws NoSuchMethodException {
-		new Foo().foo(new int[][]{{1,2,3}, {4,5,6}});
+		new Foo(this).foo(new int[][]{{1,2,3}, {4,5,6}});
 	}
 
 	@Test
@@ -21,9 +21,5 @@ public class CallStackTest {
 	@Test
 	public void constructorBooleanArg() throws NoSuchMethodException {
 		new Foo(true);
-	}
-	
-	public void foo() {
-		new Throwable().printStackTrace();
 	}
 }

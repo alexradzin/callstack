@@ -13,7 +13,7 @@ public class CallStack {
 		return callStackElements.get().toArray(typeMarkingArray);
 	}
 	
-	static <F extends AccessibleObject> void pushCallStackElement(Class<?> declaringType, String fileName, int lineNumber, F function, Object[] args) {
+	static <F extends AccessibleObject> void pushCallStackElement(Class<?> declaringType, String fileName, int lineNumber, Object object, F function, Object[] args) {
 		List<CallStackElement<?>> elements = callStackElements.get();
 		CallStackElement<?> caller = null;
 		if (elements == null) {
@@ -23,7 +23,7 @@ public class CallStack {
 			caller = elements.get(0);
 		}
 
-		elements.add(0, new CallStackElement<F>(caller, Thread.currentThread(), declaringType, fileName, lineNumber, function, args));
+		elements.add(0, new CallStackElement<F>(caller, Thread.currentThread(), declaringType, fileName, lineNumber, object, function, args));
 	}
 	
 	static void removeCallStackElement() {

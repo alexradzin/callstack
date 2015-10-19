@@ -40,7 +40,8 @@ public class CallStackAspect {
 			//TODO: add log here?
 		}
 		SourceLocation location = thisJoinPoint.getSourceLocation();
-		CallStack.pushCallStackElement(type, location.getFileName(), location.getLine(), function, thisJoinPoint.getArgs());
+		
+		CallStack.pushCallStackElement(type, location.getFileName(), location.getLine(), thisJoinPoint.getThis(), function, thisJoinPoint.getArgs());
 	}
 
 	private void pop() {
